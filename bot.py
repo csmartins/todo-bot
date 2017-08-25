@@ -3,6 +3,9 @@ from telepot.loop import MessageLoop
 import time
 import sys
 
+# {1: 'something to do'}
+todo_items = dict()
+
 
 def handle_message(message):
     command = message['text'].lower()
@@ -19,7 +22,30 @@ def handle_message(message):
         response += '/list: list your items\n'
 
         bot.sendMessage(id, response)
-        
+
+    # /todo something to be done
+    elif command.startswith('/todo'):
+        new_item = command.split('/todo ')[1]
+
+        todo_id = len(todo_items.items()) + 1
+        global todo_items
+        todo_items[todo_id] = new_item
+
+        bot.sendMessage(id, "Your to do '{}' was saved".format(new_item))
+
+    elif command == '/list':
+        response = "Your to dos:\n"
+        for k in todo_items.keys():
+            response += '{}: {}\n'.format(k, todo_items[k])
+
+        bot.sendMessage(id, response)
+
+    # /done id
+    elif command.startswith('/done'):
+        todo_id = command.split('/done ')[1]
+        todo_items.pop(int(todo_id))
+
+        bot.sendMessage(id, "To do #{} was marked as done. Use /list to see all your to dos.".format(todo_id))
 
 TOKEN = sys.argv[1]
 
