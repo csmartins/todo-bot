@@ -27,8 +27,8 @@ def handle_message(message):
     elif command.startswith('/todo'):
         new_item = command.split('/todo ')[1]
 
-        todo_id = len(todo_items.items()) + 1
         global todo_items
+        todo_id = len(todo_items.items()) + 1
         todo_items[todo_id] = new_item
 
         bot.sendMessage(id, "Your to do '{}' was saved".format(new_item))
